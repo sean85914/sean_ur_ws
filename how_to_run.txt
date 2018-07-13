@@ -1,0 +1,5 @@
+roslaunch ur_modern_driver ur5_bringup.launch robot_ip:=192.168.0.4
+roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch
+
+# run simple_move
+rosrun ur_modern_driver simple_move
