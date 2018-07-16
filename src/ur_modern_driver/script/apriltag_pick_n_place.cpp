@@ -89,36 +89,10 @@ class RobotArm {
       } catch (tf::TransformException ex) {
         ROS_ERROR("%s", ex.what());
       } 
-      /*
-      tf::Quaternion q(tf_tag2base_link_.getRotation().x(),
-                       tf_tag2base_link_.getRotation().y(),
-                       tf_tag2base_link_.getRotation().z(),
-                       tf_tag2base_link_.getRotation().w()); 
-      tf::Matrix3x3 m_(q);
-      double roll_, pitch_, yaw_;
-      m_.getRPY(roll_, pitch_, yaw_);
-      */
-      // Print for debuging
-      //std::cout << "Roll: " << roll_ << "; pitch: " << pitch_ << "; yaw: " << yaw_ << std::endl;
       tf_tag_link2tag_.setOrigin(tf::Vector3(0, 0, 0));
-      if(msg.detections[i].id == pick_id) {
-        /*tf_tag_link2base_link_.setOrigin(tf::Vector3(tf_tag2base_link_.getOrigin().x()-0.03, // toward gripper positive z-axis
-                                                     tf_tag2base_link_.getOrigin().y(),
-                                                     tf_tag2base_link_.getOrigin().z())) ;
-        tf_tag_link2base_link_.setRotation(tf::createQuaternionFromRPY(-3.1415, 1.5708, yaw_));*/
-        tf_tag_link2tag_.setRotation(tf::createQuaternionFromRPY(3.1415, 1.5708, 0));
-      }
-
-      else 
-        tf_tag_link2tag_.setRotation(tf::createQuaternionFromRPY(3.1415, 1.5708, 0.0));
+      tf_tag_link2tag_.setRotation(tf::createQuaternionFromRPY(3.1415, 1.5708, 0.0));
       tf_tag_link2base_link_ = tf_tag2base_link_ * tf_tag_link2tag_;
       
-      /*if(msg.detections[i].id == place_id) {
-        tf::Vector3 col = tf_tag2base_link_.getBasis().getColumn(2); // Left base_link basis positive z-axis, prevent from avoiding to shelf
-        tf_tag_link2base_link_.setOrigin(tf::Vector3(tf_tag_link2base_link_.getOrigin().getX() + 0.05 * col.getX() , 
-                                                     tf_tag_link2base_link_.getOrigin().getY() + 0.05 * col.getY() ,
-                                                     tf_tag_link2base_link_.getOrigin().getZ() + 0.05 * col.getZ()));
-      }*/
       br_.sendTransform(tf::StampedTransform(tf_tag_link2base_link_, ros::Time::now(), "base_link", "tag_link"));    
     }
   }
