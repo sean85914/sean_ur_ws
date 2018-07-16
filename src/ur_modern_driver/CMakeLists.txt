@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   ur_msgs
   tf
   apriltags_ros
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -60,11 +61,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  pose_control.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -74,10 +74,12 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
+generate_messages(
+  DEPENDENCIES
 #   control_msgs#   geometry_msgs#   sensor_msgs#   trajectory_msgs#   ur_msgs
-# )
+  std_msgs
+  geometry_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -168,9 +170,14 @@ add_executable(ur_driver ${${PROJECT_NAME}_SOURCES})
 add_executable(simple_move script/minimum_code_for_ur5.cpp)
 add_dependencies(simple_move ${catkin_EXPORTED_TARGETS})
 target_link_libraries(simple_move ${catkin_LIBRARIES} ur_kin)
+
 add_executable(apriltag_demo script/apriltag_pick_n_place.cpp)
 add_dependencies(apriltag_demo ${catkin_EXPORTED_TARGETS})
 target_link_libraries(apriltag_demo ${catkin_LIBRARIES} ur_kin)
+
+add_executable(pose_control_server script/pose_control_server.cpp)
+add_dependencies(pose_control_server ${catkin_EXPORTED_TARGETS})
+target_link_libraries(pose_control_server ${catlin_LIBRARIES} ur_kin)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
