@@ -20,7 +20,7 @@ const double joint_standby[6] = {1.6598024368286133, -1.1725829283343714, 0.6662
 const double joint_shelf[6] = {0.048524126410484314, -2.250532929097311, 1.784745216369629, -2.4896023909198206, -1.613234821950094, -1.5081117788897913};
 // Gripper length
 // 0.16 meter for robotiq
-const double tcp_length = 0.22;
+const double tcp_length = 0.18;
 // Maxmimum joint speed
 const double joint_speed = 3.0;
 // Pick and place apriltag id (predefined)
@@ -88,8 +88,11 @@ class RobotArm {
         listener_.lookupTransform("base_link", frameID, ros::Time(0), tf_tag2base_link_);   
       } catch (tf::TransformException ex) {
         ROS_ERROR("%s", ex.what());
-      } 
-      tf_tag_link2tag_.setOrigin(tf::Vector3(0, 0, 0));
+      }
+      if (msg.detections[i].id == pick_id)
+      	tf_tag_link2tag_.setOrigin(tf::Vector3(0, 0, 0));
+      else 
+	tf_tag_link2tag_.setOrigin(tf::Vector3(0, 0, 0.1)); // Place in front of tag about 0.1 meter
       tf_tag_link2tag_.setRotation(tf::createQuaternionFromRPY(3.1415, 1.5708, 0.0));
       tf_tag_link2base_link_ = tf_tag2base_link_ * tf_tag_link2tag_;
       
@@ -381,7 +384,6 @@ int main(int argc, char** argv)
     ros::Duration(1.0).sleep();
   }
   
-  std::cout << "x: " << transform.getOrigin().x() << ", y: " << transform.getOrigin().y() << ", z: " << transform.getOrigin().z() << std::endl;
   pose.position.x = transform.getOrigin().x();
   pose.position.y = transform.getOrigin().y();
   pose.position.z = transform.getOrigin().z();
@@ -440,7 +442,7 @@ int main(int argc, char** argv)
   std::cout << "x: " << transform.getOrigin().x() << ", y: " << transform.getOrigin().y() << ", z: " << transform.getOrigin().z() << std::endl;
   pose.position.x = transform.getOrigin().x();
   pose.position.y = transform.getOrigin().y();
-  pose.position.z = transform.getOrigin().z()+0.03;
+  pose.position.z = transform.getOrigin().z();
   pose.orientation.x = transform.getRotation().x();
   pose.orientation.y = transform.getRotation().y();
   pose.orientation.z = transform.getRotation().z();
@@ -462,6 +464,9 @@ int main(int argc, char** argv)
   //cmd.rACT = 1; cmd.rGTO = 1; cmd.rATR = 0; cmd.rPR = 0; cmd.rSP = 255; cmd.rFR= 40;
   //pub_gripper_cmd.publish(cmd); ros::Duration(0.5).sleep();
   usleep(500000); // After loose the gripper, hold 0.5s
+  std::cout << "Waitkey: s to start" << std::endl;
+  std::cin >> in;
+  if(in != 's') return 0;
   // 6.2 Return to shelf point
   std::cout << "Return to shelf point" << std::endl;
   arm.startTrajectory(arm.armShelfTrajectory());
