@@ -5,7 +5,7 @@
 #include <tf/transform_listener.h>
 #include <geometry_msgs/Pose.h>
 #include <geometry_msgs/Quaternion.h>
-#include <ur_kin/ur_kin.h>
+#include <ur_kin/ur5_kin.h>
 #include <std_srvs/Empty.h>
 #include <thread>
 

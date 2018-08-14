@@ -147,9 +147,13 @@ add_library(ur_hardware_interface src/ur_hardware_interface.cpp)
 target_link_libraries(ur_hardware_interface
   ${catkin_LIBRARIES}
 )
+add_library(ur3_kin src/ur3_kin.cpp)
+target_link_libraries(ur3_kin ${catkin_LIBRARIES})
 
-add_library(ur_kin src/ur_kin.cpp)
-target_link_libraries(ur_kin ${catkin_LIBRARIES})
+add_library(ur5_kin src/ur5_kin.cpp)
+target_link_libraries(ur5_kin ${catkin_LIBRARIES})
+
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -167,17 +171,25 @@ set(${PROJECT_NAME}_SOURCES
     src/do_output.cpp)
 add_executable(ur_driver ${${PROJECT_NAME}_SOURCES})
 
+# UR5 simple move
 add_executable(simple_move script/minimum_code_for_ur5.cpp)
 add_dependencies(simple_move ${catkin_EXPORTED_TARGETS})
-target_link_libraries(simple_move ${catkin_LIBRARIES} ur_kin)
+target_link_libraries(simple_move ${catkin_LIBRARIES} ur5_kin)
 
+# UR3 simple move
+add_executable(test_ur3 script/minimum_code_for_ur3.cpp)
+add_dependencies(test_ur3 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(test_ur3 ${catkin_LIBRARIES} ur3_kin)
+
+# UR5 Apriltag
 add_executable(apriltag_demo script/apriltag_pick_n_place.cpp)
 add_dependencies(apriltag_demo ${catkin_EXPORTED_TARGETS})
-target_link_libraries(apriltag_demo ${catkin_LIBRARIES} ur_kin)
+target_link_libraries(apriltag_demo ${catkin_LIBRARIES} ur5_kin)
 
+# UR5 pose control server
 add_executable(pose_control_server script/pose_control_server.cpp)
 add_dependencies(pose_control_server ${catkin_EXPORTED_TARGETS})
-target_link_libraries(pose_control_server ${catlin_LIBRARIES} ur_kin)
+target_link_libraries(pose_control_server ${catlin_LIBRARIES} ur3_kin)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above

@@ -1,4 +1,4 @@
-#include <ur_kin/ur_kin.h>
+#include <ur_kin/ur5_kin.h>
 
 namespace ur_kinematics {
 
